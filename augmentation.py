@@ -41,17 +41,16 @@ def get_transforms(train: bool) -> T.Compose:
     if train:
         return T.Compose(
             [
-                # ----------------------------------------------------------
-                # STUDENT: Extend the training pipeline below.
-                # Keep the Resize and Normalize steps; add augmentations
-                # between or around them as appropriate.
-                # ----------------------------------------------------------
                 T.Resize(224),
+                T.RandomCrop(224, padding=28),        # translation invariance
                 T.RandomHorizontalFlip(),
-                # Add more augmentations here ↓
+                T.ColorJitter(
+                    brightness=0.4, contrast=0.4,
+                    saturation=0.2, hue=0.1,
+                ),                                    # colour robustness
                 T.ToTensor(),
                 T.Normalize(mean=_CIFAR100_MEAN, std=_CIFAR100_STD),
-                # ----------------------------------------------------------
+                T.RandomErasing(p=0.1),               # occlusion robustness
             ]
         )
     else:

@@ -29,9 +29,10 @@ def init_last_layer(layer: nn.Linear) -> None:
           - Small-scale init (e.g. scale weights by 0.01) — conservative start
           - Non-zero bias init           — useful when class priors are known
     """
-    # -------------------------------------------------------------------------
-    # STUDENT: Replace or extend the initialization below.
-    # -------------------------------------------------------------------------
-    nn.init.kaiming_uniform_(layer.weight, nonlinearity="relu")
+    # Xavier uniform gives variance-preserving initial logits for this
+    # 512→100 head. Scaling by 0.01 keeps initial logits small (~0.2),
+    # so softmax starts near uniform (loss ≈ log(100) ≈ 4.6) — a clean
+    # baseline for ZO optimization with no runaway classes.
+    nn.init.xavier_uniform_(layer.weight)
+    layer.weight.data.mul_(0.01)
     nn.init.zeros_(layer.bias)
-    # -------------------------------------------------------------------------
