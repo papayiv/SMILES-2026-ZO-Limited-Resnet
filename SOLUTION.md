@@ -16,12 +16,12 @@ Tested with Python 3.10, PyTorch 2.x, torchvision 0.17+. CIFAR-100 is downloaded
 python validate.py \
     --data_dir ./data \
     --batch_size 32 \
-    --n_batches 256 \
+    --n_batches 32 \
     --output results.json \
     --seed 42
 ```
 
-`256 × 32 = 8192` — exactly the maximum allowed budget.
+`32 × 32 < 8192` — is not the maximum allowed budget to prevent overtrain.
 
 ---
 
@@ -83,6 +83,11 @@ Importantly, `validate.py` loads each training batch once and re-uses the same t
 ---
 
 ## Experiments and Failed Attempts
+
+### Monte-Carlo Idea
+
+Tried to approximate minimum of F(x), not f(x). So I would use monte-carlo sampling to get integral F(x + dx) - F(x). Sorrily, it  hadn't done any good work.
+
 
 ### Per-parameter 2-point estimator (skeleton)
 
